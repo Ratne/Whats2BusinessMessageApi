@@ -12,7 +12,6 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 require('./mongodb')
 
-
 app.listen(port, () => {
     console.log(`App disponibile al ${process.env.URL}:${port}`)
 })
@@ -33,13 +32,17 @@ app.get('/send',  (req,res)=> {
      const today = new Date();
      const newDay = today.setMinutes(today.getMinutes()+1);
      const result = msg.map(m => {
+         const contactArray = [];
+         if (m.name) contactArray.push(m.name);
+         if (m.surname) contactArray.push(m.surname)
+         const fullName = contactArray.join(' ')
          return {
              number: m.phone?.replaceAll('(', '').replaceAll(')', '').replaceAll(' ','').replaceAll('-',''),
              msg: m.message,
              contact: '',
              attach: '',
              dateSend: new Date(newDay).toISOString(),
-             fullname: '',
+             fullname: fullName,
              tag1: '',
              tag: '',
              tag3: '',
