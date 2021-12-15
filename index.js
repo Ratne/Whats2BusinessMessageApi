@@ -20,7 +20,7 @@ app.listen(port, () => {
 app.post('/message', (req,res)=>{
     const message = new Message(req.body)
     message.save().then(res =>{console.log(res)})
-    res.status(200);
+    res.status(200).send('ok');
 })
 
 
