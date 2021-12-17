@@ -12,6 +12,10 @@ const messageSchema = new mongoose.Schema({
         trim: true,
         required: true,
     },
+    countryCode:{
+      type: String,
+      trim: true
+    },
     name: {
         type: String,
         trim: true

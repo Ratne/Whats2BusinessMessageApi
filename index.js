@@ -19,8 +19,11 @@ app.listen(port, () => {
 
 app.post('/message', (req,res)=>{
     const message = new Message(req.body)
-    message.save().then(res =>{console.log(res)})
-    res.status(200).send('ok');
+    if (message.phone && message.message){
+        message.save().then(res =>{console.log(res)}).catch(err => res.status(400).send('qualcosa è andato storto'))
+        res.status(200).send('ok');
+   }
+   else res.status(404).send('phone and message required');
 })
 
 
@@ -36,8 +39,9 @@ app.get('/send',  (req,res)=> {
          if (m.name) contactArray.push(m.name);
          if (m.surname) contactArray.push(m.surname)
          const fullName = contactArray.join(' ')
+
          return {
-             number: m.phone?.replaceAll('(', '').replaceAll(')', '').replaceAll(' ','').replaceAll('-',''),
+             number: `${m.countryCode || '' }${m.phone?.replaceAll('(', '').replaceAll(')', '').replaceAll(' ','').replaceAll('-','')}` ,
              msg: m.message,
              contact: '',
              attach: '',
