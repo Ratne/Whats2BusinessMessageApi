@@ -8,7 +8,7 @@ COPY package*.json ./
 
 # install project dependencies
 RUN npm install
-
+chmod -R 777 /log/
 # copy project files and folders to the current working directory (i.e. 'app' folder)
 COPY . .
 

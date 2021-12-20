@@ -6,15 +6,28 @@ const bodyParser = require('body-parser');
 const Message = require('./Models/Message')
 const cors = require('cors')
 app.use(cors());
-
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
-
 require('./mongodb')
-
+const fs = require('fs');
+var logFile = fs.createWriteStream('./log/log.txt', { flags: 'a' });
+var logStdout = process.stdout;
+const util = require('util');
 app.listen(port, () => {
     console.log(`App disponibile al ${process.env.URL}:${port}`)
 })
+
+
+
+console.log = function () {
+    logFile.write(util.format.apply(null, arguments) + '\n');
+    logStdout.write(util.format.apply(null, arguments) + '\n');
+}
+console.error = console.log;
+
+
+
+
 
 
 app.post('/message', (req,res)=>{
@@ -57,6 +70,7 @@ app.get('/send',  (req,res)=> {
              data2: '',
          }
      })
+     console.log(result)
      Message.deleteMany({}).then(res => console.log('rimosso'))
      result.length? res.send(result) : res.status(404).send([])
 
